@@ -1,8 +1,6 @@
-
 export const techIcons = [
   { name: 'JavaScript', color: '#F7DF1E', angle: 0 },
   { name: 'Python', color: '#3776AB', angle: 45 },
-  { name: 'Go', color: '#00ADD8', angle: 90 },
   { name: 'SQL', color: '#4479A1', angle: 135 },
   { name: 'Django', color: '#092E20', angle: 180 },
   { name: 'Linux', color: '#FCC624', angle: 225 },
