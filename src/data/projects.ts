@@ -6,7 +6,7 @@ export const projects = [
     image: "/images/webcapture.jpeg",
     tech: ["HTML5", "CSS3 | SCSS", "React | TypeScript", "Python (Flask)"],
     github: "https://github.com/landroverism/ireporter-new.git",
-    live: "https://ireporter-demo.netlify.app"
+    live: "https://ireporter-new.vercel.app/"
   },
   {
     title: "Seamless Web App",
