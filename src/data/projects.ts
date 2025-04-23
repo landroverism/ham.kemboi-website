@@ -14,6 +14,6 @@ export const projects = [
     image: "/images/seamcap.jpeg",
     tech: ["Vue", "HTML5", "CSS3 | SCSS", "Typescript"],
     github: "https://github.com/landroverism/SEAMLESS-web-app.git",
-    live: "https://seamless-tailoring.netlify.app"
+    live: "https://seam-less-app.netlify.app/"
   }
 ];
