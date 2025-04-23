@@ -4,7 +4,7 @@ export const projects = [
     description: "Seamless is a web platform designed to modernize the custom tailoring industry by enabling remote ordering, self-measurements, and direct communication between clients and tailors.",
     image: "/images/seamcap.jpeg",
     tech: ["Vue", "HTML5", "CSS3 | SCSS", "Typescript"],
-    github: "https://github.com/landroverism/SEAMLESS-web-app.git",
+    github: "https://github.com/landroverism/seam-less-app",
     live: "https://seam-less-app.netlify.app/"
   },
   {
