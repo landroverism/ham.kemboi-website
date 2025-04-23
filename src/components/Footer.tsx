@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
         <div className="flex gap-6">
           {[
             { icon: Github, href: "https://github.com/landroverism" },
-            { icon: Linkedin, href: "https://www.linkedin.com/in/ham-kemboi-916940260/" },
+            { icon: Linkedin, href: "https://www.linkedin.com/in/ham-kemboi-988562361/" },
             { icon: Twitter, href: "https://twitter.com/hamkemboi/" },
             { icon: Mail, href: "mailto:kemboiham3@gmail.com" },
           ].map((social, index) => (
