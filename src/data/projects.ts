@@ -1,11 +1,11 @@
 export const projects = [
   {
-    title: "Seamless Web App",
-    description: "Seamless is a web platform designed to modernize the custom tailoring industry by enabling remote ordering, self-measurements, and direct communication between clients and tailors.",
-    image: "/images/seamcap.jpeg",
-    tech: ["Vue", "HTML5", "CSS3 | SCSS", "Typescript"],
-    github: "https://github.com/landroverism/seam-less-app",
-    live: "https://seam-less-app.netlify.app/"
+    title: "Tailorly",
+    description: "Tailorly is a web platform designed to modernize the custom tailoring industry by enabling remote ordering, self-measurements, and direct communication between clients and tailors.",
+    image: "/images/Tailorly.png",
+    tech: ["Vue", "HTML5", "CSS3 | SCSS", "Typescript" ,"Tailwind CSS", "Node.js", "Express.js", "MongoDB", "Socket.io", "Socket.io-redis"],
+    github: "https://github.com/landroverism/Tailorly#",
+    live: "https://tailorly.netlify.app/"
   },
   {
     title: "Ireporter",
