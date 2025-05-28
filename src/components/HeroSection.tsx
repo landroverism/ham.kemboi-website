@@ -96,7 +96,7 @@ const HeroSection: React.FC = () => {
               {/* Static profile circle */}
               <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-primary glass-morphism">
                 <img
-                  src="./images/hammy.jpg"
+                  src="./images/redmi.jpg"
                   alt="Profile"
                   className="w-full h-full object-cover"
                   loading="lazy"
