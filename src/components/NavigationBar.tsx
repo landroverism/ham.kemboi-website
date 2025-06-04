@@ -1,26 +1,51 @@
 
-import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import ReactDOM from 'react-dom';
 
 const NavigationBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [currentSection, setCurrentSection] = useState("hero");
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
+  
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
   
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 50], [1, 0.8]);
+  const lastScrollY = useRef(0);
   
   useEffect(() => {
     const handleScroll = () => {
+      // Check if scrolled past threshold
       if (window.scrollY > 20) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
+      
+      // Hide/show navbar based on scroll direction
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current + 10) {
+        setVisible(false); // Scrolling down - hide navbar
+      } else if (currentScrollY < lastScrollY.current - 10 || currentScrollY <= 0) {
+        setVisible(true);  // Scrolling up or at top - show navbar
+      }
+      lastScrollY.current = currentScrollY;
       
       // Detect which section is currently visible
       const sections = ["hero", "about", "projects", "testimonials", "contact"];
@@ -47,26 +72,80 @@ const NavigationBar: React.FC = () => {
     closed: { opacity: 0, x: "100%", transition: { duration: 0.3 } }
   };
   
-  // Determine hamburger menu color based on current section
+  // Determine colors based on current section
   const getMenuColor = () => {
     if (["about", "projects"].includes(currentSection)) {
-      return theme === 'dark' ? "text-white" : "text-gray-800";
+      return "text-white";
     }
     return "text-primary";
   };
   
+  // Get appropriate background for navbar based on section
+  const getNavbarBackground = () => {
+    if (["projects", "contact", "testimonials"].includes(currentSection)) {
+      return scrolled ? 'glass-morphism bg-black/50' : '';
+    }
+    return scrolled ? 'glass-morphism' : '';
+  };
+  
+  // Mobile Menu Portal Component
+  const MobileMenuPortal = () => {
+    if (!isOpen) return null;
+    
+    return ReactDOM.createPortal(
+      <div className="fixed inset-0 w-full h-full bg-black/50 backdrop-blur-sm z-[9999] md:hidden">
+        <motion.div 
+          className="fixed inset-0 bg-[#121826] flex flex-col items-center justify-center"
+          initial={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 28px) 28px)' }}
+          animate={{ opacity: 1, clipPath: 'circle(150% at calc(100% - 28px) 28px)' }}
+          exit={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 28px) 28px)' }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute top-4 right-6">
+            <motion.button
+              className="flex items-center justify-center text-white w-10 h-10 rounded-full bg-primary/20 border border-primary/30"
+              onClick={() => setIsOpen(false)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <X size={24} />
+            </motion.button>
+          </div>
+          <div className="flex flex-col space-y-8 items-center text-center">
+            {navLinks.map((item) => (
+              <motion.a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className="text-xl text-gray-300 hover:text-white transition-colors py-2"
+                onClick={() => setIsOpen(false)}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                {item}
+              </motion.a>
+            ))}
+          </div>
+        </motion.div>
+      </div>,
+      document.body
+    );
+  };
+
   return (
-    <motion.nav 
-      className={`fixed w-full py-4 px-6 z-50 transition-all duration-300 ${
-        scrolled ? 'glass-morphism' : ''
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{ opacity }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <>
+      <motion.nav 
+        className={`fixed w-full py-4 px-6 z-50 transition-all duration-300 ${
+          getNavbarBackground()
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: visible ? 0 : -100 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        style={{ opacity }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
       <div 
         className={`absolute inset-0 transition-all duration-300 ${
           isHovered ? 'animate-navbar-hover' : ''
@@ -76,11 +155,11 @@ const NavigationBar: React.FC = () => {
       <div className="max-w-7xl mx-auto relative z-10 flex justify-between items-center">
         <motion.a 
           href="#"
-          className="text-2xl font-bold text-gradient"
+          className="text-4xl font-bold text-primary"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
-          HK.
+          <span className="text-white">H</span><span className="text-primary">K</span><span className="text-primary">.</span>
         </motion.a>
         
         <div className="hidden md:flex items-center gap-8">
@@ -88,51 +167,25 @@ const NavigationBar: React.FC = () => {
             <motion.a
               key={item}
               href={`#${item.toLowerCase()}`}
-              className="nav-link"
+              className={`nav-link ${
+                ["projects", "contact", "testimonials"].includes(currentSection) ? 
+                'text-white hover:text-primary' : 'text-foreground hover:text-primary'
+              }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               {item}
             </motion.a>
           ))}
-          
-          {/* Theme Toggle Button */}
-          <motion.button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-muted hover:bg-muted/70 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Toggle theme"
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-5 w-5 text-yellow-300" />
-            ) : (
-              <Moon className="h-5 w-5 text-primary" />
-            )}
-          </motion.button>
+
         </div>
         
         {/* Mobile Navigation Toggle - Adaptive background and color */}
         <div className="md:hidden flex items-center gap-2">
-          {/* Theme Toggle Button for Mobile */}
           <motion.button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-muted hover:bg-muted/70 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Toggle theme"
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-5 w-5 text-yellow-300" />
-            ) : (
-              <Moon className="h-5 w-5 text-primary" />
-            )}
-          </motion.button>
-          
-          <motion.button
-            className={`flex items-center justify-center ${getMenuColor()} z-50 w-10 h-10 rounded-full ${
+            className={`flex items-center justify-center ${getMenuColor()} z-[9999] w-10 h-10 rounded-full ${
               currentSection === "hero" ? "bg-background/90" : "bg-primary/10"
-            } border border-border`}
+            } border border-border relative`}
             onClick={() => setIsOpen(!isOpen)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -141,40 +194,15 @@ const NavigationBar: React.FC = () => {
           </motion.button>
         </div>
         
-        {/* Mobile Navigation Drawer - Improved styling */}
-        <motion.div 
-          className="fixed top-0 right-0 bottom-0 w-3/4 neo-blur z-40 pt-20 px-6 flex flex-col md:hidden"
-          initial="closed"
-          animate={isOpen ? "open" : "closed"}
-          variants={variants}
-        >
-          <div className="flex flex-col space-y-6">
-            {navLinks.map((item) => (
-              <motion.a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="mobile-nav-link"
-                onClick={() => setIsOpen(false)}
-                whileHover={{ x: 5 }}
-              >
-                {item}
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
-        
-        {/* Backdrop for mobile menu */}
-        {isOpen && (
-          <motion.div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)}
-          />
-        )}
+
       </div>
     </motion.nav>
+      
+      {/* Render mobile menu using portal */}
+      <AnimatePresence>
+        {isOpen && <MobileMenuPortal />}
+      </AnimatePresence>
+    </>
   );
 };
 

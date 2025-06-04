@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Circle } from 'lucide-react';
 import { techIcons } from '../data/techIcons';
 
 const HeroSection: React.FC = () => {
-  const [hoveredIcon, setHoveredIcon] = useState<number | null>(null);
+  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -96,7 +95,7 @@ const HeroSection: React.FC = () => {
               {/* Static profile circle */}
               <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-primary glass-morphism">
                 <img
-                  src="./images/redmi.jpg"
+                  src="/images/profile.jpg"
                   alt="Profile"
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -105,7 +104,7 @@ const HeroSection: React.FC = () => {
 
               {/* Optional: Orbit path indicator */}
               <div
-                className="absolute rounded-full border border-gray-500/20"
+                className="absolute rounded-full border border-primary/10"
                 style={{
                   width: orbitRadius * 2 + "px",
                   height: orbitRadius * 2 + "px",
@@ -118,12 +117,13 @@ const HeroSection: React.FC = () => {
               {/* Tech Icons - Fixed Orbital Positioning */}
               {techIcons.map((tech, index) => {
                 const totalIcons = techIcons.length;
-                const angle = 270 + (index * (360 / totalIcons));
+                const angle = 270 + (index * (360 / totalIcons)); // Start from the top and distribute clockwise
                 const angleInRadians = (angle * Math.PI) / 180;
 
-                // Calculate position
                 const x = Math.cos(angleInRadians) * orbitRadius;
                 const y = Math.sin(angleInRadians) * orbitRadius;
+
+                const isHovered = hoveredIcon === tech.name;
 
                 return (
                   <div
@@ -132,26 +132,47 @@ const HeroSection: React.FC = () => {
                     style={{
                       left: "50%",
                       top: "50%",
-                      width: "40px",
-                      height: "40px",
-                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`
+                      width: "56px", // Corresponds to md:w-14
+                      height: "65px", // Corresponds to md:h-[65px] for hexagon aspect ratio
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                      zIndex: isHovered ? 10 : 1
                     }}
                   >
-                    {/* Tech icon */}
-                    <div
-                      className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white cursor-pointer"
-                      style={{ backgroundColor: tech.color }}
+                    <motion.div
+                      className="w-10 h-[46px] md:w-14 md:h-[65px] flex items-center justify-center text-white cursor-pointer"
+                      style={{
+                        clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                        backgroundColor: '#0284c7', // Consistent blue color like in the reference image
+                        boxShadow: isHovered ? '0 0 15px 5px rgba(2, 132, 199, 0.4)' : 'none'
+                      }}
+                      onMouseEnter={() => setHoveredIcon(tech.name)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                      whileHover={{ scale: 1.15, transition: { duration: 0.2 } }}
                     >
-                      <Circle className="w-4 h-4 md:w-6 md:h-6" />
-                    </div>
-
-                    {/* Tech name */}
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2 mt-1 text-xs md:text-sm font-medium bg-black/80 px-2 py-1 rounded whitespace-nowrap"
-                      style={{ top: "100%" }}
-                    >
-                      {tech.name}
-                    </div>
+                      <span className="text-lg md:text-xl font-semibold">
+                        {tech.name === 'JavaScript' && 'JS'}
+                        {tech.name === 'Python' && 'Py'}
+                        {tech.name === 'Django' && 'dj'}
+                        {tech.name === 'React' && <span className="text-cyan-300">⚛</span>}
+                        {tech.name === 'Node.js' && <span className="text-green-400">⬢</span>}
+                        {tech.name === 'SQL' && 'SQL'}
+                        {tech.name === 'Linux' && <span className="text-yellow-300">🐧</span>}
+                      </span>
+                    </motion.div>
+                    
+                    <AnimatePresence>
+                      {isHovered && (
+                        <motion.div
+                          className="absolute left-1/2 -translate-x-1/2 mt-2 px-3 py-1 bg-black/80 rounded text-white text-sm whitespace-nowrap"
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          style={{ top: '100%' }}
+                        >
+                          {tech.name}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 );
               })}
