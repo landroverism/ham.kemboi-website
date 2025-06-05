@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ArrowUp } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import ReactDOM from 'react-dom';
 
@@ -11,6 +10,7 @@ const NavigationBar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [currentSection, setCurrentSection] = useState("hero");
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const { theme } = useTheme();
   
   // Prevent body scroll when menu is open
@@ -65,6 +65,26 @@ const NavigationBar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 500) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+  
   const navLinks = ['About', 'Projects', 'Testimonials', 'Contact'];
   
   const variants = {
@@ -91,9 +111,13 @@ const NavigationBar: React.FC = () => {
   // Mobile Menu Portal Component
   const MobileMenuPortal = () => {
     if (!isOpen) return null;
-    
     return ReactDOM.createPortal(
-      <div className="fixed inset-0 w-full h-full bg-black/50 backdrop-blur-sm z-[9999] md:hidden">
+      <div 
+        className="fixed inset-0 w-full h-full bg-black/50 backdrop-blur-sm z-[9999] md:hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile navigation menu"
+      >
         <motion.div 
           className="fixed inset-0 bg-[#121826] flex flex-col items-center justify-center"
           initial={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 28px) 28px)' }}
@@ -107,16 +131,17 @@ const NavigationBar: React.FC = () => {
               onClick={() => setIsOpen(false)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Close mobile menu"
             >
               <X size={24} />
             </motion.button>
           </div>
-          <div className="flex flex-col space-y-8 items-center text-center">
+          <nav className="flex flex-col space-y-8 items-center text-center">
             {navLinks.map((item) => (
               <motion.a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-xl text-gray-300 hover:text-white transition-colors py-2"
+                className="text-xl text-gray-300 hover:text-white transition-colors py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#121826] px-4 rounded"
                 onClick={() => setIsOpen(false)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -126,7 +151,7 @@ const NavigationBar: React.FC = () => {
                 {item}
               </motion.a>
             ))}
-          </div>
+          </nav>
         </motion.div>
       </div>,
       document.body
@@ -145,62 +170,75 @@ const NavigationBar: React.FC = () => {
         style={{ opacity }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        role="navigation"
+        aria-label="Main navigation"
       >
-      <div 
-        className={`absolute inset-0 transition-all duration-300 ${
-          isHovered ? 'animate-navbar-hover' : ''
-        }`}
-      ></div>
-      
-      <div className="max-w-7xl mx-auto relative z-10 flex justify-between items-center">
-        <motion.a 
-          href="#"
-          className="text-4xl font-bold text-primary"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="text-white">H</span><span className="text-primary">K</span><span className="text-primary">.</span>
-        </motion.a>
-        
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((item) => (
-            <motion.a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className={`nav-link ${
-                ["projects", "contact", "testimonials"].includes(currentSection) ? 
-                'text-white hover:text-primary' : 'text-foreground hover:text-primary'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {item}
-            </motion.a>
-          ))}
-
-        </div>
-        
-        {/* Mobile Navigation Toggle - Adaptive background and color */}
-        <div className="md:hidden flex items-center gap-2">
-          <motion.button
-            className={`flex items-center justify-center ${getMenuColor()} z-[9999] w-10 h-10 rounded-full ${
-              currentSection === "hero" ? "bg-background/90" : "bg-primary/10"
-            } border border-border relative`}
-            onClick={() => setIsOpen(!isOpen)}
+        <div className="max-w-7xl mx-auto relative z-10 flex justify-between items-center">
+          <motion.a 
+            href="#"
+            className="text-4xl font-bold text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#121826] rounded px-2"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            aria-label="Ham Kemboi - Back to top"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            <span className="text-white">H</span><span className="text-primary">K</span><span className="text-primary">.</span>
+          </motion.a>
+          
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((item) => (
+              <motion.a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className={`nav-link focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#121826] px-2 py-1 rounded ${
+                  currentSection === item.toLowerCase() ? 'text-primary' : 
+                  ["projects", "contact", "testimonials"].includes(currentSection) ? 
+                  'text-white hover:text-primary' : 'text-foreground hover:text-primary'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-current={currentSection === item.toLowerCase() ? 'page' : undefined}
+              >
+                {item}
+              </motion.a>
+            ))}
+          </div>
+          
+          {/* Mobile Navigation Toggle */}
+          <motion.button
+            className="md:hidden flex items-center justify-center text-white w-10 h-10 rounded-full bg-primary/20 border border-primary/30 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#121826]"
+            onClick={() => setIsOpen(true)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Open mobile menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
+          >
+            <Menu size={24} />
           </motion.button>
         </div>
-        
-
-      </div>
-    </motion.nav>
+      </motion.nav>
       
       {/* Render mobile menu using portal */}
       <AnimatePresence>
         {isOpen && <MobileMenuPortal />}
+      </AnimatePresence>
+      
+      {/* Scroll to top button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-[#121826]"
+            onClick={scrollToTop}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Scroll to top"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
       </AnimatePresence>
     </>
   );
