@@ -76,7 +76,7 @@ const HeroSection: React.FC = () => {
               {/* Static profile circle with enhanced glass morphism */}
               <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-primary glass-morphism shadow-lg" style={{ boxShadow: '0 0 25px rgba(2, 132, 199, 0.3)' }}>
                 <img
-                  src="/images/profile .jpg"
+                  src="/images/profile.jpg"
                   alt="Ham Kemboi profile photo"
                   className="w-full h-full object-cover"
                   loading="lazy"
