@@ -10,7 +10,7 @@ const HeroSection: React.FC = () => {
     threshold: 0.1,
   });
 
-  const [orbitRadius, setOrbitRadius] = useState(220);
+  // Animation controls for orbit rotation
   const orbitControls = useAnimation();
   
   // Start orbit animation when component mounts
@@ -18,28 +18,12 @@ const HeroSection: React.FC = () => {
     orbitControls.start({
       rotate: 360,
       transition: {
-        duration: 120,
+        duration: 60,
         ease: "linear",
         repeat: Infinity,
       }
     });
-  }, []);
-
-  useEffect(() => {
-    const updateOrbitRadius = () => {
-      if (window.innerWidth <= 480) {
-        setOrbitRadius(120); // Very small screens
-      } else if (window.innerWidth <= 768) {
-        setOrbitRadius(150); // Tablets
-      } else {
-        setOrbitRadius(220); // Default
-      }
-    };
-
-    window.addEventListener('resize', updateOrbitRadius);
-    updateOrbitRadius();
-    return () => window.removeEventListener('resize', updateOrbitRadius);
-  }, []);
+  }, [orbitControls]);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -49,7 +33,7 @@ const HeroSection: React.FC = () => {
   return (
     <motion.section
       ref={heroRef}
-      className="min-h-screen flex items-center justify-center px-6 pt-20"
+      className="min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden"
       initial="hidden"
       animate={heroInView ? "visible" : "hidden"}
       variants={{
@@ -62,7 +46,8 @@ const HeroSection: React.FC = () => {
       }}
       aria-label="Hero section"
     >
-      <div className="max-w-7xl w-full grid md:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-7xl">
+        {/* Left column - Text content */}
         <div className="space-y-6">
           <motion.div className="flex items-center gap-2" variants={fadeInUp}>
             <hr className="w-12 border-primary" aria-hidden="true" />
@@ -72,122 +57,6 @@ const HeroSection: React.FC = () => {
           <motion.h1 className="text-4xl md:text-5xl font-bold" variants={fadeInUp} tabIndex={0}>
             Hi there, I'm
             <span className="text-gradient"> Ham Kemboi</span>
-            <div className="relative w-full h-full max-w-[280px] max-h-[280px] md:max-w-[320px] md:max-h-[320px] mx-auto">
-              {/* Static profile circle with enhanced glass morphism */}
-              <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-primary glass-morphism shadow-lg" style={{ boxShadow: '0 0 25px rgba(2, 132, 199, 0.3)' }}>
-                <img
-                  src="/images/profile.jpg"
-                  alt="Ham Kemboi profile photo"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  fetchPriority="high"
-                />
-              </div>
-
-              {/* Animated orbit path indicator */}
-              <motion.div
-                className="absolute rounded-full border border-primary/20"
-                style={{
-                  width: orbitRadius * 2 + "px",
-                  height: orbitRadius * 2 + "px",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                  boxShadow: "0 0 15px rgba(2, 132, 199, 0.1) inset"
-                }}
-                animate={{
-                  boxShadow: ["0 0 15px rgba(2, 132, 199, 0.1) inset", "0 0 25px rgba(2, 132, 199, 0.2) inset", "0 0 15px rgba(2, 132, 199, 0.1) inset"],
-                }}
-                transition={{
-                  duration: 3,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-                aria-hidden="true"
-              ></motion.div>
-
-              {/* Tech Icons - Animated Orbital Positioning */}
-              <motion.div
-                className="absolute w-full h-full"
-                animate={orbitControls}
-                style={{
-                  width: orbitRadius * 2 + "px",
-                  height: orbitRadius * 2 + "px",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                {techIcons.map((tech, index) => {
-                  const totalIcons = techIcons.length;
-                  const angle = 270 + (index * (360 / totalIcons)); // Start from the top and distribute clockwise
-                  const angleInRadians = (angle * Math.PI) / 180;
-
-                  const x = Math.cos(angleInRadians) * orbitRadius;
-                  const y = Math.sin(angleInRadians) * orbitRadius;
-
-                  const isHovered = hoveredIcon === tech.name;
-
-                  return (
-                    <motion.div
-                      key={tech.name}
-                      className="absolute"
-                      style={{
-                        left: "50%",
-                        top: "50%",
-                        width: "56px", // Corresponds to md:w-14
-                        height: "65px", // Corresponds to md:h-[65px] for hexagon aspect ratio
-                        transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                        zIndex: isHovered ? 10 : 1,
-                        transformOrigin: "center"
-                      }}
-                      // Counter-rotate to keep icons upright while orbit rotates
-                      animate={{ rotate: -angle }}
-                      transition={{ duration: 0 }}
-                    >
-                      <motion.div
-                        className="w-10 h-[46px] md:w-14 md:h-[65px] flex items-center justify-center text-white cursor-pointer"
-                        style={{
-                          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                          backgroundColor: '#0284c7', // Consistent blue color like in the reference image
-                          boxShadow: isHovered ? '0 0 15px 5px rgba(2, 132, 199, 0.4)' : '0 0 5px rgba(2, 132, 199, 0.2)'
-                        }}
-                        onMouseEnter={() => setHoveredIcon(tech.name)}
-                        onMouseLeave={() => setHoveredIcon(null)}
-                        whileHover={{ scale: 1.15, transition: { duration: 0.2 } }}
-                        aria-label={`${tech.name} technology icon`}
-                        role="img"
-                      >
-                        <span className="text-lg md:text-xl font-semibold">
-                          {tech.name === 'JavaScript' && 'JS'}
-                          {tech.name === 'Python' && 'Py'}
-                          {tech.name === 'Django' && 'dj'}
-                          {tech.name === 'React' && <span className="text-cyan-300">⚛</span>}
-                          {tech.name === 'Node.js' && <span className="text-green-400">⬢</span>}
-                          {tech.name === 'SQL' && 'SQL'}
-                          {tech.name === 'Linux' && <span className="text-yellow-300">🐧</span>}
-                        </span>
-                      </motion.div>
-                      
-                      <AnimatePresence>
-                        {isHovered && (
-                          <motion.div
-                            className="absolute left-1/2 -translate-x-1/2 mt-2 px-3 py-1 bg-black/80 rounded text-white text-sm whitespace-nowrap"
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -5 }}
-                            style={{ top: '100%' }}
-                          >
-                            {tech.name}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
-            </div>
           </motion.h1>
           
           <motion.p className="text-base md:text-xl text-muted-foreground" variants={fadeInUp} tabIndex={0}>
@@ -220,124 +89,171 @@ const HeroSection: React.FC = () => {
           </motion.div>
         </div>
         
-        <motion.div className="relative aspect-square max-w-sm mx-auto w-full" variants={fadeInUp}>
-          {/* Profile Image Container */}
-          <div className="absolute inset-0 m-auto flex items-center justify-center">
-            <div className="relative w-full h-full max-w-[280px] max-h-[280px] md:max-w-[320px] md:max-h-[320px] mx-auto">
-              {/* Static profile circle with enhanced glass morphism */}
-              <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-primary glass-morphism shadow-lg" style={{ boxShadow: '0 0 25px rgba(2, 132, 199, 0.3)' }}>
-                <img
-                  src="/images/profile .jpg"
-                  alt="Ham Kemboi profile photo"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  fetchPriority="high"
-                />
-              </div>
+        {/* Right column - Profile image with orbiting icons */}
+        <motion.div 
+          className="relative w-full max-w-[600px] h-[600px] md:h-[600px] sm:h-[400px] xs:h-[350px] flex items-center justify-center"
+          variants={fadeInUp}
+        >
+          {/* Dark circular background */}
+          <div className="absolute w-full h-full rounded-full flex items-center justify-center"
+            style={{
+              backgroundColor: 'rgba(12, 20, 37, 0.8)',
+              boxShadow: '0 0 30px 5px rgba(0, 168, 255, 0.3)'
+            }}
+          >
+            {/* Profile Image */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] rounded-full overflow-hidden border-4 border-[#00a8ff] shadow-[0_0_25px_rgba(0,168,255,0.4)] z-20">
+              <img
+                src="/images/profile.jpg"
+                alt="Ham Kemboi profile photo"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
 
-              {/* Animated orbit path indicator */}
-              <motion.div
-                className="absolute rounded-full border border-primary/20"
+            {/* Tech Icons - Fixed Positions */}
+            {/* JavaScript Icon - Top */}
+            <div className="absolute top-[40px] left-1/2 -translate-x-1/2 z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
                 style={{
-                  width: orbitRadius * 2 + "px",
-                  height: orbitRadius * 2 + "px",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                  boxShadow: "0 0 15px rgba(2, 132, 199, 0.1) inset"
-                }}
-                animate={{
-                  boxShadow: ["0 0 15px rgba(2, 132, 199, 0.1) inset", "0 0 25px rgba(2, 132, 199, 0.2) inset", "0 0 15px rgba(2, 132, 199, 0.1) inset"],
-                }}
-                transition={{
-                  duration: 3,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-                aria-hidden="true"
-              ></motion.div>
-
-              {/* Tech Icons - Animated Orbital Positioning */}
-              <motion.div
-                className="absolute w-full h-full"
-                animate={orbitControls}
-                style={{
-                  width: orbitRadius * 2 + "px",
-                  height: orbitRadius * 2 + "px",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
                 }}
               >
-                {techIcons.map((tech, index) => {
-                  const totalIcons = techIcons.length;
-                  const angle = 270 + (index * (360 / totalIcons)); // Start from the top and distribute clockwise
-                  const angleInRadians = (angle * Math.PI) / 180;
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-lg font-bold">JS</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
 
-                  const x = Math.cos(angleInRadians) * orbitRadius;
-                  const y = Math.sin(angleInRadians) * orbitRadius;
+            {/* Python Icon - Top Right */}
+            <div className="absolute top-[100px] right-[80px] sm:top-[70px] sm:right-[50px] xs:top-[60px] xs:right-[40px] z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-2xl">🐍</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
 
-                  const isHovered = hoveredIcon === tech.name;
+            {/* Django Icon - Right */}
+            <div className="absolute top-1/2 right-[40px] sm:right-[30px] xs:right-[20px] -translate-y-1/2 z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-xl font-bold">dj</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
 
-                  return (
-                    <motion.div
-                      key={tech.name}
-                      className="absolute"
-                      style={{
-                        left: "50%",
-                        top: "50%",
-                        width: "56px", // Corresponds to md:w-14
-                        height: "65px", // Corresponds to md:h-[65px] for hexagon aspect ratio
-                        transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                        zIndex: isHovered ? 10 : 1,
-                        transformOrigin: "center"
-                      }}
-                      // Counter-rotate to keep icons upright while orbit rotates
-                      animate={{ rotate: -angle }}
-                      transition={{ duration: 0 }}
-                    >
-                      <motion.div
-                        className="w-10 h-[46px] md:w-14 md:h-[65px] flex items-center justify-center text-white cursor-pointer"
-                        style={{
-                          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                          backgroundColor: '#0284c7', // Consistent blue color like in the reference image
-                          boxShadow: isHovered ? '0 0 15px 5px rgba(2, 132, 199, 0.4)' : '0 0 5px rgba(2, 132, 199, 0.2)'
-                        }}
-                        onMouseEnter={() => setHoveredIcon(tech.name)}
-                        onMouseLeave={() => setHoveredIcon(null)}
-                        whileHover={{ scale: 1.15, transition: { duration: 0.2 } }}
-                        aria-label={`${tech.name} technology icon`}
-                        role="img"
-                      >
-                        <span className="text-lg md:text-xl font-semibold">
-                          {tech.name === 'JavaScript' && 'JS'}
-                          {tech.name === 'Python' && 'Py'}
-                          {tech.name === 'Django' && 'dj'}
-                          {tech.name === 'React' && <span className="text-cyan-300">⚛</span>}
-                          {tech.name === 'Node.js' && <span className="text-green-400">⬢</span>}
-                          {tech.name === 'SQL' && 'SQL'}
-                          {tech.name === 'Linux' && <span className="text-yellow-300">🐧</span>}
-                        </span>
-                      </motion.div>
-                      
-                      <AnimatePresence>
-                        {isHovered && (
-                          <motion.div
-                            className="absolute left-1/2 -translate-x-1/2 mt-2 px-3 py-1 bg-black/80 rounded text-white text-sm whitespace-nowrap"
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -5 }}
-                            style={{ top: '100%' }}
-                          >
-                            {tech.name}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
+            {/* React Icon - Bottom Right */}
+            <div className="absolute bottom-[100px] right-[80px] sm:bottom-[70px] sm:right-[50px] xs:bottom-[60px] xs:right-[40px] z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-xl">⚛</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
+
+            {/* SQL Icon - Bottom */}
+            <div className="absolute bottom-[40px] left-1/2 -translate-x-1/2 z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-lg font-bold">SQL</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Node.js Icon - Bottom Left */}
+            <div className="absolute bottom-[100px] left-[80px] sm:bottom-[70px] sm:left-[50px] xs:bottom-[60px] xs:left-[40px] z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-xl">⬢</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Linux Icon - Left */}
+            <div className="absolute top-1/2 left-[40px] sm:left-[30px] xs:left-[20px] -translate-y-1/2 z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-xl">🐧</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Go Icon - Top Left */}
+            <div className="absolute top-[100px] left-[80px] sm:top-[70px] sm:left-[50px] xs:top-[60px] xs:left-[40px] z-10">
+              <div className="w-14 h-16 md:w-14 md:h-16 sm:w-10 sm:h-12 xs:w-8 xs:h-10 flex items-center justify-center cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  backgroundColor: '#0c1425',
+                  border: '2px solid rgba(0, 168, 255, 0.8)',
+                  boxShadow: '0 0 10px 2px rgba(0, 168, 255, 0.4)'
+                }}
+              >
+                <div className="flex flex-col items-center">
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                  <span className="text-[#00a8ff] text-lg font-bold">GO</span>
+                  <span className="text-[#00a8ff] text-xs">|</span>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>
