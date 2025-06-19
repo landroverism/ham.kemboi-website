@@ -13,7 +13,7 @@ export const projects = [
     image: "/images/hamwood.png",
     tech: ["Next.js 15.1.-", "React | Material UI Icons", "TypeScript", "Turbopack", "Supabase", "Tailwind CSS", "Socket.io", "Socket.io-redis"],
     github: "https://github.com/landroverism/hamwood.git",
-    live: "https:hamwood.netlify.app/"
+    live: "https://hamwood.netlify.app/"
   },
   {
     title: "Ireporter",
