@@ -3,8 +3,8 @@ export const projects = [
   {
     title: "Ireporter",
     description: "iReporter is a cutting-edge web platform that empowers citizens to report corruption, request government intervention, and highlight issues requiring attention. Built with modern web technologies and enhanced with AI capabilities, this application serves as a digital bridge between citizens and authorities.",
-    image: "/images/webcapture.jpeg",
-    tech: ["HTML5", "CSS3 | SCSS", "React 19 | TypeScript", "Convex", "Node(Express)", "Tailwind CSS", "Socket.io", "Socket.io-redis"],
+    image: "/images/report.png",
+    tech: ["HTML5", "CSS3 | SCSS", "React 19 | TypeScript", "Convex", "Node(Express)", "gpt-4.1-nano(AI smart assistant)", "Tailwind CSS", "Socket.io", "Socket.io-redis"],
     github: "https://github.com/landroverism/iReporter-Application",
     live: "https://ireporter-new.netlify.app/"
   },
