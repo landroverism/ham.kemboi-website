@@ -25,7 +25,7 @@ export const projects = [
     tech: ["Vue", "HTML5", "CSS3 | SCSS", "Typescript" ,"Tailwind CSS", "Node.js", "Express.js", "MongoDB", "Socket.io", "Socket.io-redis"],
     github: "https://github.com/landroverism/Tailorly#",
     live: "https://tailorly.netlify.app/"
-  },
+  }
 
 
 ];
