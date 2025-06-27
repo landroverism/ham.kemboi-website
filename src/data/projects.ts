@@ -1,4 +1,14 @@
 export const projects = [
+
+  {
+    title: "Ireporter",
+    description: "iReporter is a cutting-edge web platform that empowers citizens to report corruption, request government intervention, and highlight issues requiring attention. Built with modern web technologies and enhanced with AI capabilities, this application serves as a digital bridge between citizens and authorities.",
+    image: "/images/webcapture.jpeg",
+    tech: ["HTML5", "CSS3 | SCSS", "React 19 | TypeScript", "Convex", "Node(Express)", "Tailwind CSS", "Socket.io", "Socket.io-redis"],
+    github: "https://github.com/landroverism/iReporter-Application",
+    live: "https://ireporter-new.netlify.app/"
+  },
+  
   {
     title: "Tailorly",
     description: "Tailorly is a web platform designed to modernize the custom tailoring industry by enabling remote ordering, self-measurements, and direct communication between clients and tailors.",
@@ -14,14 +24,7 @@ export const projects = [
     tech: ["Next.js 15.1.-", "React | Material UI Icons", "TypeScript", "Turbopack", "Supabase", "Tailwind CSS", "Socket.io", "Socket.io-redis"],
     github: "https://github.com/landroverism/hamwood.git",
     live: "https://hamwood.netlify.app"
-  },
-  {
-    title: "Ireporter",
-    description: "iReporter is an app that allows users to report incidents like crimes or community issues by capturing and uploading photos, videos, and descriptions in real-time, helping authorities address problems quickly.",
-    image: "/images/webcapture.jpeg",
-    tech: ["HTML5", "CSS3 | SCSS", "React | TypeScript", "Python (Flask)"],
-    github: "https://github.com/landroverism/ireporter-new.git",
-    live: "https://ireporter-new.vercel.app/"
   }
+
 
 ];
