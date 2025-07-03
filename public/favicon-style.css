@@ -1,0 +1,4 @@
+/* CSS to apply a bright blue filter to the favicon */
+link[rel="icon"] {
+  filter: hue-rotate(210deg) saturate(300%) brightness(180%) contrast(110%);
+}
