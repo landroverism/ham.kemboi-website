@@ -3,8 +3,24 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Github, ExternalLink } from 'lucide-react';
 import { projects } from '../data/projects';
+import { toast } from "@/components/ui/use-toast";
 
 const ProjectsSection: React.FC = () => {
+  // Handler for private repo click
+  const handlePrivateRepoClick = (e: React.MouseEvent, projectTitle: string) => {
+    e.preventDefault();
+    toast({
+      title: 'Repository Private',
+      description: (
+        <span>
+          This repository is currently hidden for privacy reasons.<br />
+          But feel free to check out my other public projects on my{' '}
+          <a href="https://github.com/landroverism" target="_blank" rel="noopener noreferrer" className="underline text-blue-500 hover:text-blue-400">GitHub profile</a>!
+        </span>
+      ),
+    });
+  };
+
   return (
     <section id="projects" className="py-20 px-6 bg-secondary/50">
       <div className="max-w-7xl mx-auto">
@@ -59,17 +75,28 @@ const ProjectsSection: React.FC = () => {
                   ))}
                 </div>
                 <div className="flex gap-4">
-                  <motion.a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-primary hover:text-primary/80"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Github className="w-5 h-5" />
-                    Repository
-                  </motion.a>
+                  {project.private ? (
+                    <button
+                      type="button"
+                      onClick={(e) => handlePrivateRepoClick(e, project.title)}
+                      className="flex items-center gap-2 text-primary hover:text-primary/80 focus:outline-none"
+                    >
+                      <Github className="w-5 h-5" />
+                      Repository
+                    </button>
+                  ) : (
+                    <motion.a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-primary hover:text-primary/80"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Github className="w-5 h-5" />
+                      Repository
+                    </motion.a>
+                  )}
                   {project.live && (
                     <motion.a
                       href={project.live}
