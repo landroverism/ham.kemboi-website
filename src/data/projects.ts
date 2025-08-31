@@ -1,4 +1,5 @@
 export const projects = [
+  // TEST COMMENT - This should appear immediately if hot reload is working!
 
   {
     title: "Ireporter",
@@ -6,7 +7,7 @@ export const projects = [
         image: "/images/Ireporter-pic.jpeg",
     tech: ["HTML5", "CSS3 | SCSS", "React 19 | TypeScript", "Convex", "Node(Express)", "gpt-4.1-nano(AI smart assistant)", "Tailwind CSS", "Socket.io", "Socket.io-redis"],
     github: "https://github.com/landroverism/iReporter-Application",
-    live: "https://ireporter-new.netlify.app/",
+    live: "https://ireporter-ham.netlify.app/",
     private: true
   },
   
