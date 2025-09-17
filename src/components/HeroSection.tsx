@@ -104,7 +104,7 @@ const HeroSection: React.FC = () => {
             {/* Profile Image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] rounded-full overflow-hidden border-4 border-[#00a8ff] shadow-[0_0_25px_rgba(0,168,255,0.4)] z-20">
               <img
-                src="/images/profile.jpg"
+                src="/images/bravo.png"
                 alt="Ham Kemboi profile photo"
                 className="w-full h-full object-cover"
                 loading="lazy"
