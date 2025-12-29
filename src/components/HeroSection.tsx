@@ -32,7 +32,7 @@ const HeroSection: React.FC = () => {
       }}
       aria-label="Hero section"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 w-full max-w-7xl relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-8 lg:gap-6 w-full max-w-[1800px] relative z-10">
         {/* Left column - Text content with clean negative space */}
         <div className="space-y-6 lg:pr-8 flex flex-col justify-center">
           <motion.div className="flex items-center gap-2" variants={fadeInUp}>
@@ -78,20 +78,26 @@ const HeroSection: React.FC = () => {
         
         {/* Right column - Large hero image */}
         <motion.div 
-          className="relative w-full lg:w-[55%] flex items-center justify-center lg:justify-end"
+          className="relative w-full flex items-center justify-center overflow-visible"
           variants={fadeInUp}
         >
           <motion.div 
-            className="relative w-full max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[900px] flex items-center justify-center"
+            className="relative w-full h-[650px] sm:h-[750px] md:h-[850px] lg:h-[950px] xl:h-[1050px] 2xl:h-[1150px] flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <img
-              src="/images/web3.png"
+              src="/images/web5.png"
               alt="Ham Kemboi - Fullstack Developer"
-              className="w-full h-full object-contain object-center"
+              className="h-full w-auto max-w-none object-contain object-center"
+              style={{
+                imageRendering: 'crisp-edges' as const,
+                minHeight: '100%',
+                transform: 'scale(1.1)',
+              }}
               loading="eager"
+              fetchPriority="high"
             />
           </motion.div>
         </motion.div>
