@@ -18,7 +18,7 @@ const ProfileOrbit: React.FC = () => {
         style={{ width: '300px', height: '300px', backgroundColor: '#1E2A44' }}
       >
         <img
-          src="/images/bravo.png"
+          src="/images/suspender.png"
           alt="Profile"
           className="absolute inset-0 object-cover w-full h-full"
         />

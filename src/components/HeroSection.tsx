@@ -82,19 +82,17 @@ const HeroSection: React.FC = () => {
           variants={fadeInUp}
         >
           <motion.div 
-            className="relative w-full h-[650px] sm:h-[750px] md:h-[850px] lg:h-[950px] xl:h-[1050px] 2xl:h-[1150px] flex items-center justify-center"
+            className="relative w-full h-[380px] sm:h-[420px] md:h-[480px] lg:h-[520px] xl:h-[560px] 2xl:h-[600px] flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <img
-              src="/images/web5.png"
+              src="/images/suspender.png"
               alt="Ham Kemboi - Fullstack Developer"
-              className="h-full w-auto max-w-none object-contain object-center"
+              className="h-full w-auto max-w-full object-contain object-center"
               style={{
                 imageRendering: 'crisp-edges' as const,
-                minHeight: '100%',
-                transform: 'scale(1.1)',
               }}
               loading="eager"
               fetchPriority="high"
