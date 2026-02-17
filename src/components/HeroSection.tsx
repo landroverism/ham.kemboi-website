@@ -88,7 +88,7 @@ const HeroSection: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <img
-              src="/images/suspender.png"
+              src="/images/ham-bg.png"
               alt="Ham Kemboi - Fullstack Developer"
               className="h-full w-auto max-w-full object-contain object-center"
               style={{
